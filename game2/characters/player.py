@@ -46,6 +46,7 @@ class Player:
         self.equipped_gun.change_magazine()
 
     def shoot_gun(self):
+        # TODO pass position of shooter as in front of player not 0,0 top coordinates
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.equipped_gun.trigger(self.pos_x, self.pos_y, mouse_x, mouse_y)
 
