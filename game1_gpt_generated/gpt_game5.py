@@ -7,8 +7,8 @@ import time
 pygame.init()
 
 # Constants for screen dimensions
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1024
+SCREEN_HEIGHT = 1024
 
 # Colors
 BLACK = (0, 0, 0)
@@ -30,14 +30,14 @@ enemy_size = enemy_image.get_rect().size
 
 # Player settings
 player_pos = [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]
-player_speed = 5
+player_speed = 3
 
 # Bullet settings
-bullet_speed = 10
+bullet_speed = 50
 bullets = []
 
 # Burst settings
-burst_count = 3  # Number of bullets in a burst
+burst_count = 1  # Number of bullets in a burst
 burst_delay = 0.1  # Delay between each bullet in a burst
 burst_in_progress = False
 burst_bullets = []  # To track bullets in the burst
@@ -46,6 +46,7 @@ burst_start_time = 0  # To track when the burst starts
 # Enemy settings
 enemy_speed = 2
 enemies = []
+
 
 # Function to spawn enemies at random locations at screen edges
 def spawn_enemy():
@@ -72,6 +73,7 @@ def spawn_enemy():
         "image": rotated_enemy_image,
     }
 
+
 # Initial enemy spawn
 enemies.append(spawn_enemy())
 
@@ -93,13 +95,13 @@ while running:
 
     # Player movement logic
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
+    if keys[pygame.K_a]:
         player_pos[0] -= player_speed
-    if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_d]:
         player_pos[0] += player_speed
-    if keys[pygame.K_UP]:
+    if keys[pygame.K_w]:
         player_pos[1] -= player_speed
-    if keys[pygame.K_DOWN]:
+    if keys[pygame.K_s]:
         player_pos[1] += player_speed
 
     # Keep the player within screen bounds
@@ -155,26 +157,30 @@ while running:
         enemy["image"] = rotated_enemy_image  # Rotate to face the player
 
     # Draw to the screen
-    screen.fill(BLACK)
+    screen.fill(WHITE)
 
     # Adjust position to center the rotated image (since rotation changes the rect)
-    player_center_offset = (rotated_player_image.get_width() - player_size[0], rotated_player_image.get_height() - player_size[1])
-    screen.blit(rotated_player_image, (player_pos[0] - player_center_offset[0] / 2, player_pos[1] - player_center_offset[1] / 2))
+    player_center_offset = (
+    rotated_player_image.get_width() - player_size[0], rotated_player_image.get_height() - player_size[1])
+    screen.blit(rotated_player_image,
+                (player_pos[0] - player_center_offset[0] / 2, player_pos[1] - player_center_offset[1] / 2))
 
     # Draw the bullets
     for bullet in bullets:
-        pygame.draw.circle(screen, WHITE, [int(bullet["pos"][0]), int(bullet["pos"][1])], 5)
+        pygame.draw.circle(screen, BLACK, [int(bullet["pos"][0]), int(bullet["pos"][1])], 2)
 
     # Draw the enemies
     for enemy in enemies:
         enemy_center_offset = (enemy["image"].get_width() - enemy_size[0], enemy["image"].get_height() - enemy_size[1])
-        screen.blit(enemy["image"], (enemy["pos"][0] - enemy_center_offset[0] / 2, enemy["pos"][1] - enemy_center_offset[1] / 2))
+        screen.blit(enemy["image"],
+                    (enemy["pos"][0] - enemy_center_offset[0] / 2, enemy["pos"][1] - enemy_center_offset[1] / 2))
 
     # Collision detection between bullets and enemies
     for bullet in bullets[:]:
         bullet_rect = pygame.Rect(bullet["pos"][0], bullet["pos"][1], 5, 5)
         for enemy in enemies[:]:
-            enemy_rect = pygame.Rect(enemy["pos"][0], enemy["pos"][1], enemy["image"].get_width(), enemy["image"].get_height())
+            enemy_rect = pygame.Rect(enemy["pos"][0], enemy["pos"][1], enemy["image"].get_width(),
+                                     enemy["image"].get_height())
             if bullet_rect.colliderect(enemy_rect):
                 bullets.remove(bullet)
                 enemies.remove(enemy)
