@@ -46,7 +46,8 @@ class Player:
         self.equipped_gun.change_magazine()
 
     def shoot_gun(self):
-        self.equipped_gun.trigger(self.pos_x, self.pos_y, self.rotation_angle)
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        self.equipped_gun.trigger(self.pos_x, self.pos_y, mouse_x, mouse_y)
 
     def move(self, action):
         if action == MOVE_LEFT:
